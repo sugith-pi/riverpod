@@ -35,7 +35,11 @@ class Counter extends _$Counter {
   @override
   int build() => 0;
 
-  void increment() => state++;
+  void increment() {
+    if (ref.mounted) {
+      state = state + 1;
+    }
+  }
 }
 
 class Home extends ConsumerWidget {

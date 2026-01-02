@@ -19,6 +19,7 @@ import 'src/lints/only_use_keep_alive_inside_keep_alive.dart';
 import 'src/lints/protected_notifier_properties.dart';
 import 'src/lints/provider_dependencies.dart';
 import 'src/lints/provider_parameters.dart';
+import 'src/lints/ref_mounted_warning.dart';
 import 'src/lints/riverpod_syntax_error.dart';
 import 'src/lints/scoped_providers_should_specify_dependencies.dart';
 import 'src/lints/unsupported_provider_value.dart';
@@ -66,6 +67,8 @@ class _RiverpodPlugin extends Plugin {
     );
 
     registry.registerWarningRule(ProviderParameters());
+    registry.registerWarningRule(RefMountedWarning());
+    registry.registerFixForRule(RefMountedWarning.code, RefMountedFix.new);
     registry.registerWarningRule(RiverpodSyntaxError());
     registry.registerWarningRule(ScopedProvidersShouldSpecifyDependencies());
     registry.registerWarningRule(UnsupportedProviderValue());
