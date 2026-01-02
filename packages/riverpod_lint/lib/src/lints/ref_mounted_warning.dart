@@ -59,16 +59,22 @@ class _Visitor extends SimpleAstVisitor<void> {
     final enclosingClass = node.thisOrAncestorOfType<ClassDeclaration>();
     if (enclosingClass == null) return;
 
-    final notifierElement = enclosingClass.declaredFragment?.element;
-    if (notifierElement == null ||
-        !anyNotifierType.isAssignableFromType(notifierElement.thisType)) {
-      return;
-    }
+    // Use riverpod_analyzer_utils to detect if this is a Riverpod-managed class
+    final isRiverpodNotifier =
+        enclosingClass.riverpod != null || _isNotifierSubclass(enclosingClass);
+
+    if (!isRiverpodNotifier) return;
 
     // Now check if it's wrapped in if (ref.mounted)
     if (!_isInsideMountedCheck(node)) {
       rule.reportAtNode(left);
     }
+  }
+
+  bool _isNotifierSubclass(ClassDeclaration node) {
+    final element = node.declaredFragment?.element;
+    if (element == null) return false;
+    return anyNotifierType.isAssignableFromType(element.thisType);
   }
 
   bool _isInsideMountedCheck(AstNode node) {
